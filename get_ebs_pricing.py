@@ -235,7 +235,7 @@ if __name__ == '__main__':
     # build ebs_pricing data
     ebs_pricing = []
     for rz_key in rz_map.keys():
-        for rz in rz_map[rz_key]:
+        for rz in sorted(rz_map[rz_key]):
             location = rz_info[rz]['location']
             ebs_prices = {}
             add_gp2_pricing(ebs_prices, prices_map[(location, 'gp2')])
