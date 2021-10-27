@@ -4,21 +4,22 @@
 The goal of this project is to create an up-to-date source for AWS EBS Pricing data that can be used programmatically. The context is to support tools that can look at EBS volumes information in an account (e.g., region, availability zone, type, size, etc.) and determine what their monthly costs would be.
 
 ## Quick Summary/Usage
-GitHub Pages hosted summary (as well as an example) can be found [here](https://cloudkeep-io.github.io/ebs-pricing).
-
-To just download the up to ebs pricing data json:
+To download the up to date ebs pricing data json:
 ```
 curl https://cloudkeep-io.github.io/ebs-pricing/ebs_pricing.json
 ```
+GitHub Pages hosted sample of how to use the json data can be found [here](https://cloudkeep-io.github.io/ebs-pricing).
 
-## Challenge and Work-around
+## Challenges and Work-arounds
 Official AWS resources for calcualting costs for using EBS volumes can be found [here](https://aws.amazon.com/ebs/pricing/). There is also a calculator linked there where you can enter in the region and EBS volume info, and it will provide your monthly cost. 
 
 The official programmatic way of retrieving the pricing information is via the [AWS Price List API](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/price-changes.html). These entries are basically prices categorized by various fields, so we can determine, e.g., what is the price of EBS gp2 volume per Gib-month in us-east-1? 
 
 However, the region code (e.g., "us-east-1") is not one of the fields in the price records. Instead something called "location" is given (e.g., "US East (N. Virginia)").
 
-There is (as far as we can tell) no API that map the region/zone codes to the location descriptions. What we see is that the [SSM API](https://aws.amazon.com/blogs/aws/new-query-for-aws-regions-endpoints-and-more-using-aws-systems-manager-parameter-store/) can map region/zone codes to `location`s but only for Local Zones and Wavelength Zones(*).  For Regions, the closest we can find is the `longName` attribute which matches the `location` descriptions for all the regions except those in Europe. For the regions in Europe, the "longName" take on the form "Europe (Frankfort)" whereas the "location" is "EU (Frankfort)". Thus we will here "calculate" the `location` of a region by simply substituting "Europe" in `longName` with "EU". Perhaps one day, the SSM database will be updated to include the `location` fields at which point we can drop this work-around. (Or better yet, the pricing API can include the region/zone codes.)
+There is (as far as we can tell) no API that map the region/zone codes to the location descriptions. What we see is that the [SSM API](https://aws.amazon.com/blogs/aws/new-query-for-aws-regions-endpoints-and-more-using-aws-systems-manager-parameter-store/) can map region/zone codes to `location`s but only for Local Zones and Wavelength Zones.(*)
+
+For Regions, the closest we can find is the `longName` attribute which matches the `location` descriptions for all the regions except those in Europe. For the regions in Europe, the "longName" take on the form "Europe (Frankfort)" whereas the "location" is "EU (Frankfort)". Thus we will here "calculate" the `location` of a region by simply substituting "Europe" in `longName` with "EU". Perhaps one day, the SSM database will be updated to include the `location` fields at which point we can drop this work-around. (Or better yet, the pricing API can include the region/zone codes.)
 
 It is also of note that not all of these region/zone codes map uniquely to a location. Two Local Zones (us-west-2-lax-1a us-west-2-lax-1b) map to the location of "US West (Los Angeles)"
 
