@@ -8,7 +8,7 @@ To download the up to date ebs pricing data json:
 ```
 curl https://cloudkeep-io.github.io/ebs-pricing/ebs_pricing.json
 ```
-GitHub Pages hosted sample of how to use the json data can be found [here](https://cloudkeep-io.github.io/ebs-pricing).
+GitHub Pages hosted sample of how to use the json data can be found at [https://cloudkeep-io.github.io/ebs-pricing](https://cloudkeep-io.github.io/ebs-pricing).
 
 ## Challenges and Work-arounds
 Official AWS resources for calcualting costs for using EBS volumes can be found [here](https://aws.amazon.com/ebs/pricing/). There is also a calculator linked there where you can enter in the region and EBS volume info, and it will provide your monthly cost. 
