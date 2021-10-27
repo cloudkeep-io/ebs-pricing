@@ -3,23 +3,25 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>EBS Pricing Table</title>
+		<title>EBS Monthly Cost Table</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	</head>
 	<body>
 
 		<div class="container mt-5">
 			<div class="row justify-content-md-center">
-				<div class="col col-9">
+				<div class="col col-12">
 
-					<h1 class="text-center">AWS EBS Pricing across regions</h1>
+					<h1 class="text-center">AWS EBS Monthly Costs across Regions/Zones</h1>
 
 					<table class="table container mt-3" id="table">
 						<thead>
 							<tr>
-								<th data-field="region">region</th>
+								<th data-field="rz">region/zone</th>
 								<th data-field="gp2">gp2</th>
+								<th data-field="gp3">gp3</th>
 								<th data-field="io1">io1</th>
+								<th data-field="io2">io2</th>
 								<th data-field="st1">st1</th>
 								<th data-field="sc1">sc1</th>
 								<th data-field="standard">standard</th>
@@ -36,27 +38,105 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 		<script>
+			let currMap = new Map([
+					['USD', '$'],
+					['CNY', '¥']
+			]);
+			let priceFormat = new Intl.NumberFormat('en-US', {
+					minimumIntegerDigits: 1,
+					minimumFractionDigits: 3
+			});
 			async function loadData() {
-				const res_regions = await fetch('https://cloudkeep-io.github.io/ebs-pricing/aws.regions.json');
-				const regions = await res_regions.json();
-				const res_prices = await fetch('https://cloudkeep-io.github.io/ebs-pricing/aws.ebs_pricing.json');
-				const prices = await res_prices.json();
-				console.log(regions);
-				console.log(prices);
+				const res_ebs_pricing = await fetch('https://cloudkeep-io.github.io/ebs-pricing/ebs_pricing.json');
+				const ebs_pricing = await res_ebs_pricing.json();
 				const tbodyElement = document.getElementById('table').getElementsByTagName('tbody')[0];
-				Object.entries(regions).forEach(([region, info]) => {
+				Object.entries(ebs_pricing).forEach(([rz, info]) => {
 					const row = tbodyElement.insertRow(-1);
-					var region_cell = row.insertCell(0);
-					region_cell.innerHTML = region + '<br/>' + '<small>' + info['description'] + '</small>';
+
+					var rz_cell = row.insertCell(0);
+					rz_cell.innerHTML = info['rzCode'] 
+						+ '<br/>' + '<small>' + info['location'] + '</small>';
+					if (info['rzType'] == 'region') {
+						rz_cell.innerHTML += '<br/>' + '<small> (Region in partition: ' + info['partition'] + ')</small>';
+					}
+					if (info['rzType'] == 'local_zone') {
+						rz_cell.innerHTML += '<br/>' + '<small> (Local Zone)</small>';
+					}
+					if (info['rzType'] == 'wavelength_zone') {
+						rz_cell.innerHTML += '<br/>' + '<small> (Wavelength Zone)</small>';
+					}
+
 					var gp2_cell = row.insertCell(1);
-					gp2_cell.innerHTML = '$' + prices['gp2'][region]['price_per_GiB']['USD'] + '/GiB'
+					if (info['ebs_prices']['gp2']) {
+						curr = Object.keys(info['ebs_prices']['gp2']['pricePerGBMonth'])[0];
+						gp2_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp2']['pricePerGBMonth'][curr]) + '/GB'
+					} else {
+						gp2_cell.innerHTML = 'N/A'
+					}
+
+					var gp3_cell = row.insertCell(2);
+					if (info['ebs_prices']['gp3']) {
+						curr = Object.keys(info['ebs_prices']['gp3']['pricePerGBMonth'])[0];
+						gp3_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerGBMonth'][curr]) + '/GB +' ;
+						gp3_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerIOPSMonth'][curr]) + '/IOPS +' ;
+						gp3_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerGiBpsMonth'][curr]/1000) + '/MiBps' ;
+					} else {
+						gp3_cell.innerHTML = 'N/A'
+					}
+
+					var io1_cell = row.insertCell(3);
+					if (info['ebs_prices']['io1']) {
+						curr = Object.keys(info['ebs_prices']['io1']['pricePerGBMonth'])[0];
+						io1_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['io1']['pricePerGBMonth'][curr]) + '/GB +';
+						io1_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['io1']['pricePerIOPSMonth'][curr]) + '/IOPS' ;
+					} else {
+						io1_cell.innerHTML = 'N/A'
+					}
+
+					var io2_cell = row.insertCell(4);
+					if (info['ebs_prices']['io2']) {
+						curr = Object.keys(info['ebs_prices']['io2']['pricePerGBMonth'])[0];
+						io2_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['io2']['pricePerGBMonth'][curr]) + '/GB +';
+						io2_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['io2']['pricePerTier1IOPSMonth'][curr]) + '/IOPS(Tier1)' ;
+						io2_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['io2']['pricePerTier2IOPSMonth'][curr]) + '/IOPS(Tier2)' ;
+						io2_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['io2']['pricePerTier3IOPSMonth'][curr]) + '/IOPS(Tier3)' ;
+					} else {
+						io2_cell.innerHTML = 'N/A'
+					}
+
+					var st1_cell = row.insertCell(5);
+					if (info['ebs_prices']['st1']) {
+						curr = Object.keys(info['ebs_prices']['st1']['pricePerGBMonth'])[0];
+						st1_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['st1']['pricePerGBMonth'][curr]) + '/GB'
+					} else {
+						st1_cell.innerHTML = 'N/A'
+					}
+
+					var sc1_cell = row.insertCell(6);
+					if (info['ebs_prices']['sc1']) {
+						curr = Object.keys(info['ebs_prices']['sc1']['pricePerGBMonth'])[0];
+						sc1_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['sc1']['pricePerGBMonth'][curr]) + '/GB'
+					} else {
+						sc1_cell.innerHTML = 'N/A'
+					}
+
+					var standard_cell = row.insertCell(7);
+					if (info['ebs_prices']['standard']) {
+						curr = Object.keys(info['ebs_prices']['standard']['pricePerGBMonth'])[0];
+						standard_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['standard']['pricePerGBMonth'][curr]) + '/GB +';
+						standard_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['standard']['pricePerIOs'][curr] * 1000000) + '/MIO' ;
+					} else {
+						standard_cell.innerHTML = 'N/A'
+					}
+
 				})
+
+
 			};
 			(function () {
 				loadData();
 			})();
 		</script>
-
 
 	</body>
 </html>
