@@ -2,6 +2,7 @@ name: Update ebs_pricing.json
 on:
   schedule:
     - cron: '0 5 * * *'
+  workflow_dispatch:
 jobs:
   report:
     runs-on: ubuntu-latest
