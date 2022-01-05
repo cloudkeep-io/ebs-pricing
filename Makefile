@@ -2,8 +2,9 @@ NOW:=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 .PHONY: update
 update: 
+	poetry install
 	poetry run python get_ebs_pricing.py > docs/ebs_pricing.json
-	echo $(NOW) > docs/last_checked
+	if ! git diff -s --exit-code docs/ebs_pricing.json ; then echo $(NOW) > docs/last_updated; fi
 
 prices.json:
 	aws pricing get-products --service-code "AmazonEC2" --filter Type=TERM_MATCH,Field=ProductFamily,Value=Storage --output json | jq -r '.PriceList[]' > prices.json

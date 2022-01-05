@@ -1,0 +1,17 @@
+name: Update ebs_pricing.json
+on:
+  schedule:
+    - cron: '0 5 * * *'
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: do an update
+        run: make update
+      - name: Commit
+        run: |
+          git config --global user.name 'GitHub Updater'
+          git config --global user.email 'support@cloudkeep.io'
+          git commit -am "daily update"
+          git push

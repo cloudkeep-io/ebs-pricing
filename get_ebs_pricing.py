@@ -219,7 +219,7 @@ if __name__ == '__main__':
     for price in prices:
         vol_type = price['product']['attributes']['volumeApiName']
         location = price['product']['attributes']['location']
-        prices_map[(location, vol_type)].append(price)
+        prices_map[(location.upper(), vol_type)].append(price)
 
     # gather all volume types and check against the supported list
     vol_types = {key[1] for key in prices_map.keys()}
@@ -238,14 +238,14 @@ if __name__ == '__main__':
         for rz in sorted(rz_map[rz_key]):
             location = rz_info[rz]['location']
             ebs_prices = {}
-            add_gp2_pricing(ebs_prices, prices_map[(location, 'gp2')])
-            add_gp3_pricing(ebs_prices, prices_map[(location, 'gp3')])
-            add_io1_pricing(ebs_prices, prices_map[(location, 'io1')])
-            add_io2_pricing(ebs_prices, prices_map[(location, 'io2')])
-            add_sc1_pricing(ebs_prices, prices_map[(location, 'sc1')])
-            add_st1_pricing(ebs_prices, prices_map[(location, 'st1')])
+            add_gp2_pricing(ebs_prices, prices_map[(location.upper(), 'gp2')])
+            add_gp3_pricing(ebs_prices, prices_map[(location.upper(), 'gp3')])
+            add_io1_pricing(ebs_prices, prices_map[(location.upper(), 'io1')])
+            add_io2_pricing(ebs_prices, prices_map[(location.upper(), 'io2')])
+            add_sc1_pricing(ebs_prices, prices_map[(location.upper(), 'sc1')])
+            add_st1_pricing(ebs_prices, prices_map[(location.upper(), 'st1')])
             add_standard_pricing(ebs_prices,
-                                 prices_map[(location, 'standard')])
+                                 prices_map[(location.upper(), 'standard')])
             rz_ebs_pricing = {
                 'rzCode':  rz,
                 'location': location,
