@@ -20,8 +20,12 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
         run: PATH=$HOME/.poetry/bin:$PATH make update
       - name: Commit
+        id: commit
         run: |
           git config --global user.name 'GitHub Updater'
           git config --global user.email 'support@cloudkeep.io'
           git commit -am "daily update"
-          git push
+        continue-on-error: true
+      - name: Push
+        if: steps.commit.outcome == 'success'
+        run: git push
