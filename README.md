@@ -2,7 +2,7 @@
 
 
 ## What is this and why does it exist?
-This repo creates/updates `ebs_pricing.json` - an up-to-date source for AWS EBS Pricing data that can be used programmatically. 
+This repo creates/updates [ebs_pricing.json](https://github.com/cloudkeep-io/ebs-pricing/blob/main/docs/ebs_pricing.json) - an automatically-updated source for AWS EBS (Elastic Block Storage) Pricing information that can be used programmatically. 
 
 This JSON encapsulates the data needed to calculate the cost of EBS volumes programmatically, based on information you can obtain from EC2 API, without needing to wade through the Pricing API.
 
