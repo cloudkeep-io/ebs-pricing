@@ -1,14 +1,17 @@
 # EBS-Pricing
 
-## Goal
-The goal of this project is to create an up-to-date source for AWS EBS Pricing data that can be used programmatically. The context is to support tools that can look at EBS volumes information in an account (e.g., region, availability zone, type, size, etc.) and determine what their monthly costs would be.
 
-## Quick Summary/Usage
-To download the up to date ebs pricing data json:
+## What is this and why does it exist?
+This repo creates/updates `ebs_pricing.json` - an up-to-date source for AWS EBS Pricing data that can be used programmatically. 
+
+This JSON encapsulates the data needed to calculate the cost of EBS volumes programmatically, based on information you can obtain from EC2 API, without needing to wade through the Pricing API.
+
+To download the current `ebs_pricing.json`:
 ```
 curl https://cloudkeep-io.github.io/ebs-pricing/ebs_pricing.json
 ```
-GitHub Pages hosted sample of how to use the json data can be found at [https://cloudkeep-io.github.io/ebs-pricing](https://cloudkeep-io.github.io/ebs-pricing).
+Data can be viewed as HTML [here](https://cloudkeep-io.github.io/ebs-pricing).
+
 
 ## Challenges and Work-arounds
 Official AWS resources for calcualting costs for using EBS volumes can be found [here](https://aws.amazon.com/ebs/pricing/). There is also a calculator linked there where you can enter in the region and EBS volume info, and it will provide your monthly cost. 
@@ -29,7 +32,8 @@ It is also of note that not all of these region/zone codes map uniquely to a loc
 ## Automatic Update
 Currently we use GitHub Actions to run the Makefile to update the pricing information each day at 0500 UTC. Note the code accounts for scenarios like new regions, but not new volume types. If the build fails (as can happen when a new volume type is introduced) the maintainers are notified so that we can make appropriate corrections.
 
-## Details
+
+## Additional Details
 
 ### Pricing API
 All the prices for EBS volumes can be gotten via the AWS Price List API, filtered on serviceCode="AmazonEC2" and productFamily="Storage" | "System Operation" | "Provisioned Throughput". You can use the following CLI commands to save these in a file, `prices.json`:
