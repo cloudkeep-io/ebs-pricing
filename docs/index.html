@@ -79,7 +79,7 @@
 						curr = Object.keys(info['ebs_prices']['gp3']['pricePerGBMonth'])[0];
 						gp3_cell.innerHTML = currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerGBMonth'][curr]) + '/GB +' ;
 						gp3_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerIOPSMonth'][curr]) + '/IOPS +' ;
-						gp3_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerGiBpsMonth'][curr]/1000) + '/MiBps' ;
+						gp3_cell.innerHTML += '<br/>' + currMap.get(curr) + priceFormat.format(info['ebs_prices']['gp3']['pricePerGiBpsMonth'][curr]/1024) + '/MiBps' ;
 					} else {
 						gp3_cell.innerHTML = 'N/A'
 					}
