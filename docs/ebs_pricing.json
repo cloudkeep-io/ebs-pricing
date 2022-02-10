@@ -1531,6 +1531,18 @@
                 }
             }
         },
+        "location": "US East (Atlanta)",
+        "rzCode": "use1-atl1-az1",
+        "rzType": "local_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
         "location": "US East (Boston)",
         "rzCode": "use1-bos1-az1",
         "rzType": "local_zone"
@@ -1741,6 +1753,30 @@
         "ebs_prices": {
             "gp2": {
                 "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
+        "location": "US West (Phoenix)",
+        "rzCode": "usw2-phx1-az1",
+        "rzType": "local_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
+        "location": "US West (Seattle)",
+        "rzCode": "usw2-sea1-az1",
+        "rzType": "local_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
                     "USD": "0.1800000000"
                 }
             }
@@ -1853,8 +1889,32 @@
                 }
             }
         },
+        "location": "US East (Verizon) - Charlotte",
+        "rzCode": "use1-wl1-clt-wlz1",
+        "rzType": "wavelength_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
         "location": "US East (Verizon) - Dallas",
         "rzCode": "use1-wl1-dfw-wlz1",
+        "rzType": "wavelength_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
+        "location": "US East (Verizon) - Detroit",
+        "rzCode": "use1-wl1-dtw-wlz1",
         "rzType": "wavelength_zone"
     },
     {
@@ -1879,6 +1939,18 @@
         },
         "location": "US East (Verizon) - Miami",
         "rzCode": "use1-wl1-mia-wlz1",
+        "rzType": "wavelength_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
+        "location": "US East (Verizon) - Minneapolis",
+        "rzCode": "use1-wl1-msp-wlz1",
         "rzType": "wavelength_zone"
     },
     {
@@ -1927,6 +1999,18 @@
         },
         "location": "US West (Verizon) - Las Vegas",
         "rzCode": "usw2-wl1-las-wlz1",
+        "rzType": "wavelength_zone"
+    },
+    {
+        "ebs_prices": {
+            "gp2": {
+                "pricePerGBMonth": {
+                    "USD": "0.1500000000"
+                }
+            }
+        },
+        "location": "US West (Verizon) - Los Angeles",
+        "rzCode": "usw2-wl1-lax-wlz1",
         "rzType": "wavelength_zone"
     },
     {
